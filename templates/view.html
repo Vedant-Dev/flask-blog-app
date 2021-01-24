@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block title %}View Page{% endblock %}
+{% block body %}
+{% for i in values%}
+<p>Name: {{ i.name}} Email: {{i.email}} Password: {{i.password}}</p>
+{% endfor %}
+{% endblock %}

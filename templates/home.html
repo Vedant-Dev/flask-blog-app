@@ -1,0 +1,17 @@
+{% extends('base.html')%}
+{% block title %}{{title}}{% endblock %}
+{% block body %}
+	{% for post in posts %}
+		<br>
+		<div class="card">
+			<div class="card-header">
+				{{post.author}} {{post.id}}
+			</div>
+			<div class="card-body">
+				<h5 class="card-title">{{post.title}}</h5>
+				<p class="card-text">{{post.body[:20]}}...</p>
+				<a href="#" class="btn btn-primary">Read</a>
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}
