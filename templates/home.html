@@ -5,12 +5,12 @@
 		<br>
 		<div class="card">
 			<div class="card-header">
-				{{post.author}} {{post.id}}
+				{{post.author}}
 			</div>
 			<div class="card-body">
 				<h5 class="card-title">{{post.title}}</h5>
 				<p class="card-text">{{post.body[:20]}}...</p>
-				<a href="#" class="btn btn-primary">Read</a>
+				<a href="/read/{{ post.title }}" class="btn btn-primary">Read</a>
 			</div>
 		</div>
 	{% endfor %}

@@ -4,16 +4,20 @@
 	<br>
 	<form action="#" method="post">
 		<div class="mb-3">
+			<label for="nameformysite" class="form-label">Name</label>
+			<input class="form-control" type="text" placeholder="Name" id="nameformysite" aria-label="default input example" name="name">
+		</div>
+		<div class="mb-3">
 			<label for="emialformysite" class="form-label">Email address</label>
 			<input type="email" class="form-control" id="emialformysite" aria-describedby="emailHelp" placeholder="Email" name="email">
-			<div id="emailHelp" class="form-text">Enter your email above</div>
+			<div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
 		</div>
 		<div class="mb-3">
 			<label for="passwordformysite" class="form-label">Password</label>
 			<input type="password" class="form-control" id="passwordformysite" placeholder="Password" name="password">
 		</div>
-		<button type="submit" class="btn btn-primary">Sign in</button>
+		<button type="submit" class="btn btn-primary">Sign up</button>
 	</form>
 	<br>
-	<a href="/signup">OR create account?</a>
+		<a href="/signin">OR already have account? Sign in</a>
 {% endblock %}

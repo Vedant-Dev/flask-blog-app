@@ -69,14 +69,14 @@ def home():
 def view():
 	return render_template('view.html', values=User.query.all())
 
-@app.route('/signin', methods=['POST','GET'])
-def signin():
+@app.route('/signup', methods=['POST','GET'])
+def signup():
 	if request.method == "POST":
 		session.permanent = True
 		name = request.form["name"]
 		email = request.form["email"]
 		password = request.form["password"]
-		found_user = User.query.filter_by(name=name).first()
+		found_user = User.query.filter_by(email=email).first()
 		if not found_user:
 			user = User(name,email,password)
 			db.session.add(user)
@@ -84,21 +84,56 @@ def signin():
 			session["name"] = name
 			session["email"] = email
 			session["password"] = password
-			flash('Email already in use.')
+			flash('Signed up.')
 			return redirect(url_for("home"))
 		else:
-			#user already exists
-			pass
+			flash('Email already in use.')
 			return redirect(url_for("home"))
+	else :
+		if "name" in session:
+			flash('Already logged in...')
+			return redirect(url_for("home"))
+		return render_template("signup.html", title="Sign Up")
+
+@app.route('/signin', methods=['POST','GET'])
+def signin():
+	if request.method == "POST":
+		session.permanent = True
+		email = request.form["email"]
+		password = request.form["password"]
+		found_user = User.query.filter_by(email=email).first()
+		if found_user:
+			if password == found_user.password:
+				session["name"] = found_user.name
+				session["email"] = email
+				session["password"] = password
+				flash('Signed in.')
+				return redirect(url_for("home"))
+			else:
+				flash('Wrong password')
+				return render_template("signin.html", title="Sign Up")
+			
+		else:
+			flash('User doesn\'t exists')
+			return render_template("signin.html", title="Sign Up")
 	else :
 		if "name" in session:
 			return redirect(url_for("home"))
 		return render_template("signin.html", title="Sign In")
 
+@app.route('/read/<title>')
+def read(title):
+	post = Post.query.filter_by(title=title).first()
+	if post:
+		return render_template('read.html', title=title, post=post)
+	else:
+		return render_template('read.html', title='Error 404!', post='Not found')
+	
 @app.route("/logout")
 def logout():
 	session.pop("name", None)
 	session.pop("email", None)
+	session.pop("password", None)
 	return redirect(url_for("signin"))
 
 if __name__ == '__main__':
