@@ -128,6 +128,25 @@ def read(title):
 		return render_template('read.html', title=title, post=post)
 	else:
 		return render_template('read.html', title='Error 404!', post='Not found')
+
+@app.route('/write', methods=['POST','GET'])
+def write():
+	if request.method == "POST":
+		title = request.form['title'] if 'title' in request.form else None
+		body = request.form['body'] if 'body' in request.form else None
+		if 'title' in request.form and 'body' in request.form:
+			return render_template('write.html', title='Write A Post')
+		else:
+			flash('Fill every detail')
+			return render_template('write.html', title='Write A Post')
+		
+	else:
+		if "name" in session:
+			return render_template('write.html', title='Write A Post')
+		else:
+			flash('You must be logged in')
+			return redirect(url_for('signin'))
+		
 	
 @app.route("/logout")
 def logout():
