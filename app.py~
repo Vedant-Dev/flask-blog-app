@@ -174,4 +174,4 @@ def logout():
 if __name__ == '__main__':
 	db.create_all()
 	postHandler = PostHandler()
-	app.run()
+	app.run(debug=True)
