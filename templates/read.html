@@ -1,8 +1,15 @@
 {% extends('base.html')%}
 {% block title %}{{title}}{% endblock %}
 {% block body %}
-	<h1>{{ post.title}} by {{post.author}}</h1>
 	<br>
-	<br>
-	<h4>{{ post.body }}</h4>
+	<h1 class="display-3">{{ post.title }}</h1>
+	<figure>
+		<figcaption class="blockquote-footer">
+		by <cite title="Source Title">{{post.author}}</cite>
+		</figcaption>
+	</figure>
+	<hr>
+	<blockquote class="blockquote">
+		<p>{{ post.body }}</p>
+	</blockquote>
 {% endblock %}

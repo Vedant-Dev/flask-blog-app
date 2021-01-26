@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, redirect, session, request, f
 from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.secret_key = "thisisakey"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///posts.sqlite3'
 app.config['SQLALCHEMY_BINDS'] = {
@@ -10,13 +10,16 @@ app.config['SQLALCHEMY_BINDS'] = {
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 app.permanent_session_lifetime = timedelta(days=7)
+# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
 db = SQLAlchemy(app)
 
 class PostHandler():
 	def add_post(self, title, author, body):
-		search_result = Post.query.filter_by(title=title).first()
+		t = title.replace('?',' ')
+		t = t.replace('/', ' ')
+		search_result = Post.query.filter_by(title=t).first()
 		if not search_result:
-			post = Post(title=title,author=author,body=body)
+			post = Post(title=t,author=author,body=body)
 			db.session.add(post)
 			db.session.commit()
 			return 1
@@ -68,6 +71,16 @@ def home():
 @app.route('/view')
 def view():
 	return render_template('view.html', values=User.query.all())
+
+@app.route('/yourpost')
+def yourpost():
+	if 'name' in session:
+		posts = Post.query.filter_by(author=session['name'])
+		return render_template('yourposts.html', title='Your posts', posts=posts)
+	else:
+		flash('You must be logged in')
+		return redirect(url_for('signup'))
+	
 
 @app.route('/signup', methods=['POST','GET'])
 def signup():
@@ -123,7 +136,9 @@ def signin():
 
 @app.route('/read/<title>')
 def read(title):
-	post = Post.query.filter_by(title=title).first()
+	query = title.replace('?',' ')
+	query = query.replace('/', ' ')
+	post = Post.query.filter_by(title=query).first()
 	if post:
 		return render_template('read.html', title=title, post=post)
 	else:
@@ -135,6 +150,8 @@ def write():
 		title = request.form['title'] if 'title' in request.form else None
 		body = request.form['body'] if 'body' in request.form else None
 		if 'title' in request.form and 'body' in request.form:
+			post1 = postHandler.add_post(title, session['name'], body)
+			flash('Post saved')
 			return render_template('write.html', title='Write A Post')
 		else:
 			flash('Fill every detail')
@@ -146,7 +163,6 @@ def write():
 		else:
 			flash('You must be logged in')
 			return redirect(url_for('signin'))
-		
 	
 @app.route("/logout")
 def logout():
@@ -158,5 +174,4 @@ def logout():
 if __name__ == '__main__':
 	db.create_all()
 	postHandler = PostHandler()
-	post1 = postHandler.add_post('this is title', 'vedant singh', 'Lorem ipsum said that autocomplete in sublime text is not working i dont know why and it enough')
 	app.run(debug=True)
