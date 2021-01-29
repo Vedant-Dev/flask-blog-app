@@ -151,11 +151,11 @@ def logout():
 	return redirect(url_for("signin"))
 
 if __name__ == '__main__':
-	posts = Post.query.all()
-	for post in posts:
-		db.session.delete(post)
-	users = User.query.all()
-	for user in users:
-		db.session.delete(post)
+	# posts = Post.query.all()
+	# for post in posts:
+	# 	db.session.delete(post)
+	# users = User.query.all()
+	# for user in users:
+	# 	db.session.delete(post)
 	db.session.commit()
 	app.run()
