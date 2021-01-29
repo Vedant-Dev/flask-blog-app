@@ -150,7 +150,6 @@ def write():
 		title = request.form['title'] if 'title' in request.form else None
 		body = request.form['body'] if 'body' in request.form else None
 		if 'title' in request.form and 'body' in request.form:
-			post1 = postHandler.add_post(title, session['name'], body)
 			t = title.replace('?',' ')
 			t = t.replace('/', ' ')
 			search_result = Post.query.filter_by(title=t).first()
