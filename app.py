@@ -10,7 +10,6 @@ app.config['SQLALCHEMY_BINDS'] = {
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 app.permanent_session_lifetime = timedelta(days=7)
-# app.add_url_rule('/favicon.ico', redirect_to=url_for('static', filename='favicon.ico'))
 db = SQLAlchemy(app)
 
 class PostHandler():
@@ -181,6 +180,13 @@ def logout():
 	return redirect(url_for("signin"))
 
 if __name__ == '__main__':
+	posts = Post.query.all()
+	for post in posts:
+		db.session.delete(post)
+	users = User.query.all()
+	for user in users:
+		db.session.delete(post)
+	db.session.commit()
 	db.create_all()
 	postHandler = PostHandler()
 	app.run()
