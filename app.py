@@ -12,35 +12,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATION'] = False
 app.permanent_session_lifetime = timedelta(days=7)
 db = SQLAlchemy(app)
 
-class PostHandler():
-	def add_post(self, title, author, body):
-		t = title.replace('?',' ')
-		t = t.replace('/', ' ')
-		search_result = Post.query.filter_by(title=t).first()
-		if not search_result:
-			post = Post(title=t,author=author,body=body)
-			db.session.add(post)
-			db.session.commit()
-			return 1
-		else:
-			return 0
-	def delete(self,title):
-		search_result = Post.query.filter_by(title=title).first()
-		if search_result:
-			db.session.delete(search_result)
-			db.session.commit()
-			return 1
-		else:
-			return 0
-	def clear_database(self):
-		posts = Post.query.all()
-		for post in posts:
-			db.session.delete(post)
-		db.session.commit()
-
-	def all_post(self):
-		return Post.query.all()
-
 class Post(db.Model):
 	id = db.Column('id',db.Integer, primary_key=True)
 	title = db.Column(db.String(100), nullable=False)
@@ -187,6 +158,4 @@ if __name__ == '__main__':
 	for user in users:
 		db.session.delete(post)
 	db.session.commit()
-	db.create_all()
-	postHandler = PostHandler()
 	app.run()
