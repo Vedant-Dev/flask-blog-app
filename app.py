@@ -151,7 +151,17 @@ def write():
 		body = request.form['body'] if 'body' in request.form else None
 		if 'title' in request.form and 'body' in request.form:
 			post1 = postHandler.add_post(title, session['name'], body)
-			flash('Post saved')
+			t = title.replace('?',' ')
+			t = t.replace('/', ' ')
+			search_result = Post.query.filter_by(title=t).first()
+			if not search_result:
+				post = Post(title=t,author=session['name'],body=body)
+				db.session.add(post)
+				db.session.commit()
+				flash('Post saved')
+				return redirect(url_for('read', title=t))
+			else:
+				flash('Cant save post')
 			return render_template('write.html', title='Write A Post')
 		else:
 			flash('Fill every detail')
