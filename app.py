@@ -67,7 +67,6 @@ class User(db.Model):
 
 @app.route('/')
 def home():
-	return "Test"
     return render_template('home.html', title='Home Page', posts=postHandler.all_post())
 @app.route('/view')
 def view():
